@@ -1,0 +1,4 @@
+config.ini
+migration_log.yaml
+manager_log.yaml
+log/*.log

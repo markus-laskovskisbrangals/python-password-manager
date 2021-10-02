@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS user_passwords (
-    id NOT NULL, AUTO_INCREMENT,
+    id int NOT NULL AUTO_INCREMENT,
     name varchar(255) NOT NULL,
     password varchar(255) NOT NULL,
-    created_at DATE
+    created_at varchar(30) NOT NULL,
+    PRIMARY KEY(id)
 )
