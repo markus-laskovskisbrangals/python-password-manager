@@ -1,5 +1,6 @@
 import logging
 import logging.config
+import re
 import mysql.connector
 from mysql.connector import connection
 import yaml
@@ -111,8 +112,10 @@ def run():
             main_menu_active = False
             generate_password()
         elif option == 2:
-            print('This feature is not implemented yet')
+            #print('This feature is not implemented yet')
+            get_password()
         elif option == 3:
+            print('Goodbye!')
             exit()
         else:
             print('Answer not recognized!')
@@ -132,6 +135,24 @@ while not user_authenticated:
         logger.error('User entered wrong password')
         print('Incorrect password! Remaining tries:', remaining_tries)
 
+def get_password():
+    print('Get all passwords - 1')
+    print('Get password by name - 2')
+    option = int(input('Your choice: '))
+    if option == 1:
+        try:
+            passwords = []
+            cursor = connection.cursor(buffered=True)
+            result = cursor.execute("SELECT name, password FROM user_passwords;")
+            passwords = cursor.fetchall()
+            connection.commit()
+            for res in passwords:
+                password = ''.join(map(str, res[1]))
+                print('Password for ' + res[0] + ': ' + decrypt_password(password.encode()))
+            #print(passwords)
+        except Error as e:
+            logger.error('Problem with selectring from database: ' + str(e))
+
 def encrypt_password(password):
     encoded_password = password.encode()
     f = Fernet(key)
@@ -143,7 +164,7 @@ def decrypt_password(encrypted_password):
     f = Fernet(key)
     decrypted_password = f.decrypt(encrypted_password)
     logger.info('User decrypted a password')
-    print(decrypted_password.decode())
+    return decrypted_password.decode()
 
 def generate_password():
     password_name = input('Enter the name of your password: ')

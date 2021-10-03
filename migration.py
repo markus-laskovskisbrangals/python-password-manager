@@ -24,7 +24,7 @@ logger.info('Loading configuration from file')
 
 try:
 	config = ConfigParser()
-	config.read('password-manager/config.ini')
+	config.read('config.ini')
 
 	mysql_config_mysql_host = config.get('database', 'db_host')
 	mysql_config_mysql_db = config.get('database', 'db_name')
