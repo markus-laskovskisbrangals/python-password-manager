@@ -138,21 +138,53 @@ while not user_authenticated:
 def get_password():
     print('Get all passwords - 1')
     print('Get password by name - 2')
-    option = int(input('Your choice: '))
-    if option == 1:
-        try:
-            passwords = []
-            cursor = connection.cursor(buffered=True)
-            result = cursor.execute("SELECT name, password FROM user_passwords;")
-            passwords = cursor.fetchall()
-            connection.commit()
-            for res in passwords:
-                password = ''.join(map(str, res[1]))
-                print('Password for ' + res[0] + ': ' + decrypt_password(password.encode()))
-            #print(passwords)
-        except Error as e:
-            logger.error('Problem with selectring from database: ' + str(e))
-
+    try:
+        option = int(input('Your choice: '))
+        if option == 1:
+            password_input = input('Enter your user password: ')
+            if password_input != user_password:
+                print('Wrong password!')
+                return
+            try:
+                passwords = []
+                cursor = connection.cursor(buffered=True)
+                result = cursor.execute("SELECT name, password FROM user_passwords;")
+                passwords = cursor.fetchall()
+                connection.commit()
+                for res in passwords:
+                    password = ''.join(map(str, res[1]))
+                    print('Password for ' + res[0] + ': ' + decrypt_password(password.encode()))
+            except Error as e:
+                logger.error('Problem with selectring from database: ' + str(e))
+        elif option == 2:
+            password_input = input('Enter your user password: ')
+            if password_input != user_password:
+                print('Wrong password!')
+                return
+            try:
+                name = input('Enter name of your password: ')
+                passwords = []
+                cursor = connection.cursor(buffered=True)
+                result = cursor.execute("SELECT name, password FROM user_passwords WHERE name="+ "'" + name + "';")
+                passwords = cursor.fetchall()
+                connection.commit()
+                if len(passwords) == 0:
+                    print('There are not mathing passwords in database!')
+                    return
+                elif len(passwords) > 1:
+                    print('There are more then one results matching your request:')
+                    for res in passwords:
+                        password = ''.join(map(str, res[1]))
+                        print('Password for ' + res[0] + ': ' + decrypt_password(password.encode()))
+                    return
+                password = ''.join(map(str, passwords[0][1]))
+                print('Your password for ' + passwords[0][0] + ' is ' + decrypt_password(password.encode()))
+            except Error as e:
+                logger.error('There was a problem getting data from database: ' + str(e))
+                pass
+    except:
+        print('Only numbers are allowed!...')
+        return
 def encrypt_password(password):
     encoded_password = password.encode()
     f = Fernet(key)
