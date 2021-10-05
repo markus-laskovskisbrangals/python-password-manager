@@ -1,11 +1,8 @@
 import logging
 import logging.config
-import re
 import mysql.connector
 from mysql.connector import connection
 import yaml
-import os
-import time
 import configparser
 import random
 from cryptography import fernet
@@ -19,11 +16,12 @@ with open('manager_log.yaml', 'r') as stream:
 
 logging.config.dictConfig(config)
 
+#Creating logger file
 logger = logging.getLogger('root')
-
 logger.info('Password manager started')
 
 try:
+    #Reading config file
     logger.info('Start reading from config file')
     config = configparser.ConfigParser()
     config.read('config.ini')
@@ -48,7 +46,7 @@ symbols = '.,!@#$%^&*()'
 remaining_tries = 3
 
 combined_string = upper_case + lower_case + numbers + symbols
-user_authenticated = True
+user_authenticated = False
 connection = None
 connected = False
 
@@ -97,6 +95,7 @@ def insert_data(pass_name, password, date):
         logger.error('Problem with inserting into database: ' + str(e))
         pass
 
+#A main function which prints out main menu for user
 def run():
     main_menu_active = True
     print('What do you want to do?\n')
@@ -120,6 +119,7 @@ def run():
         else:
             print('Answer not recognized!')
 
+#While loop for user authentication
 while not user_authenticated:
     if remaining_tries == 0:
         print('You typed incorrect password 3 times in a row, access is denied!')
@@ -135,6 +135,7 @@ while not user_authenticated:
         logger.error('User entered wrong password')
         print('Incorrect password! Remaining tries:', remaining_tries)
 
+# A function to get one or more passwords from database
 def get_password():
     print('Get all passwords - 1')
     print('Get password by name - 2')
@@ -143,23 +144,28 @@ def get_password():
         if option == 1:
             password_input = input('Enter your user password: ')
             if password_input != user_password:
+                logger.error('User entered wrong password')
                 print('Wrong password!')
                 return
             try:
+                #Getting all passwords from database
                 passwords = []
                 cursor = connection.cursor(buffered=True)
                 result = cursor.execute("SELECT name, password FROM user_passwords;")
                 passwords = cursor.fetchall()
                 connection.commit()
+                logger.info('Ūser retreived all passwords from database')
                 for res in passwords:
                     password = ''.join(map(str, res[1]))
                     print('Password for ' + res[0] + ': ' + decrypt_password(password.encode()))
             except Error as e:
                 logger.error('Problem with selectring from database: ' + str(e))
         elif option == 2:
+            #Getting only one password from database
             password_input = input('Enter your user password: ')
             if password_input != user_password:
                 print('Wrong password!')
+                logger.error('User entered wrong password')
                 return
             try:
                 name = input('Enter name of your password: ')
@@ -168,6 +174,7 @@ def get_password():
                 result = cursor.execute("SELECT name, password FROM user_passwords WHERE name="+ "'" + name + "';")
                 passwords = cursor.fetchall()
                 connection.commit()
+                logger.info('User retreived password for' + name)
                 if len(passwords) == 0:
                     print('There are not mathing passwords in database!')
                     return
@@ -185,6 +192,7 @@ def get_password():
     except:
         print('Only numbers are allowed!...')
         return
+#A function which encrypts user password
 def encrypt_password(password):
     encoded_password = password.encode()
     f = Fernet(key)
@@ -192,12 +200,14 @@ def encrypt_password(password):
     logger.info('New password encrypted')
     return encrypted_password
 
+#A function which decrypts user password with a key from config file
 def decrypt_password(encrypted_password):
     f = Fernet(key)
     decrypted_password = f.decrypt(encrypted_password)
     logger.info('User decrypted a password')
     return decrypted_password.decode()
 
+#A function to generate password
 def generate_password():
     password_name = input('Enter the name of your password: ')
     try:
