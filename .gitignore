@@ -1,0 +1,5 @@
+config.ini
+migration_log.yaml
+manager_log.yaml
+log/*.log
+log/*.log.2021-*
