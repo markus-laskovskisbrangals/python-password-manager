@@ -119,21 +119,6 @@ def run():
         else:
             print('Answer not recognized!')
 
-#While loop for user authentication
-while not user_authenticated:
-    if remaining_tries == 0:
-        print('You typed incorrect password 3 times in a row, access is denied!')
-        logger.error('User entered wrong password 3 times')
-        exit()
-    auth_password = input('Please enter your password: ')
-    if auth_password == user_password:
-        logger.info('User logged in')
-        print('Welcome back!')
-        user_authenticated = True
-    else:
-        remaining_tries -= 1
-        logger.error('User entered wrong password')
-        print('Incorrect password! Remaining tries:', remaining_tries)
 
 # A function to get one or more passwords from database
 def get_password():
@@ -190,22 +175,28 @@ def get_password():
                 logger.error('There was a problem getting data from database: ' + str(e))
                 pass
     except:
-        print('Only numbers are allowed!...')
+        print('Only numbers are allowed!')
         return
 #A function which encrypts user password
 def encrypt_password(password):
-    encoded_password = password.encode()
-    f = Fernet(key)
-    encrypted_password = f.encrypt(encoded_password)
-    logger.info('New password encrypted')
-    return encrypted_password
+    if type(password) == int:
+        return 'bad'
+    else:        
+        encoded_password = password.encode()
+        f = Fernet(key)
+        encrypted_password = f.encrypt(encoded_password)
+        logger.info('New password encrypted')
+        return encrypted_password
 
 #A function which decrypts user password with a key from config file
 def decrypt_password(encrypted_password):
-    f = Fernet(key)
-    decrypted_password = f.decrypt(encrypted_password)
-    logger.info('User decrypted a password')
-    return decrypted_password.decode()
+    if type(encrypted_password) == bytes: 
+        f = Fernet(key)
+        decrypted_password = f.decrypt(encrypted_password)
+        logger.info('User decrypted a password')
+        return decrypted_password.decode()
+    else:
+        return 'bad'
 
 #A function to generate password
 def generate_password():
@@ -229,4 +220,23 @@ def generate_password():
     print('Your password for', password_name, 'is', password, 'copy your password to use it.')
     run()
 
-run()
+
+if __name__ == '__main__':
+        
+    #While loop for user authentication
+    while not user_authenticated:
+        if remaining_tries == 0:
+            print('You typed incorrect password 3 times in a row, access is denied!')
+            logger.error('User entered wrong password 3 times')
+            exit()
+        auth_password = input('Please enter your password: ')
+        if auth_password == user_password:
+            logger.info('User logged in')
+            print('Welcome back!')
+            user_authenticated = True
+        else:
+            remaining_tries -= 1
+            logger.error('User entered wrong password')
+            print('Incorrect password! Remaining tries:', remaining_tries)
+
+    run()
