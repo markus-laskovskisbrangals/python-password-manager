@@ -39,7 +39,7 @@ while not passwords_match:
         print('Passwords doesnt match. Please try again!')
     else:
         passwords_match = True
-        print('Ģret! Your password is', password)
+        print('Great! Your password is', password)
         print('Please save your password')
 
 print('--------------------------------')
@@ -52,7 +52,7 @@ print('---------------------------------')
 
 print('Now we need details about database')
 db_host = input('Enter an IP address of your database: ')
-db_name = input('Please enter yor database name: ')
+db_name = input('Please enter your database name: ')
 db_user = input('Please enter username of your database user: ')
 db_pass = input('Please enter the password of your database: ')
 
@@ -67,7 +67,7 @@ config['database'] = {'db_host': db_host,
                         'db_user': db_user,
                         'db_password': db_pass}
 
-with open('config2.ini', 'w') as configfile:
+with open('config.ini', 'w') as configfile:
     config.write(configfile)
 
 print('-----------------------------------------------')
