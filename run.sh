@@ -13,7 +13,7 @@ echo "--------------------------------------"
 echo "Renaming Files..."
 mv manager_log.yaml.dev manager_log.yaml
 if [ $? -eq 0 ]; then echo "OK"; else echo "Problem copying manager_log.yaml.dev file"; exit 1; fi
-mv migration_log.yaml.dev migration_log.yaml.dev
+mv migration_log.yaml.dev migration_log.yaml
 if [ $? -eq 0 ]; then echo "OK"; else echo "Problem copying migration_log.yaml.dev file"; exit 1; fi
 mv config.ini.template config.ini
 if [ $? -eq 0 ]; then echo "OK"; else echo "Problem copying config.ini.template file"; exit 1; fi
