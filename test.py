@@ -18,10 +18,6 @@ print('Test OK')
 print('-----------------------------------------------------------------------------')
 
 #Testing for decryption function
-print('Testing password decryption')
-assert decrypt_password('gAAAAABhWKiDIw0qABLW2E5bP-egsfNkb3JOfxAhb3gn-gEfHua116wQrH9unbdk7E477FGY6RBh-cgBp3LSEzhg51XATFsxpA=='.encode()) == 'wYtxdg.3RLoB'
-print('Test OK')
-print('-----------------------------------------------------------------------------')
 print('Testing password decryption with numbers')
 assert decrypt_password(1234) == 'bad'
 print('Test OK')

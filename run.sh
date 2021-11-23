@@ -24,7 +24,7 @@ if [ $? -eq 0 ]; then echo "OK"; else echo "Problems with setup.py"; exit 1; fi
 python3 test_config.py
 if [ $? -eq 0 ]; then echo "OK"; else echo "Problems with test_config.py"; exit 1; fi
 python3 test.py
-if [ $? -eq 0 ]; then echo "OK"; else echo "Problems with setup.py"; exit 1; fi
+if [ $? -eq 0 ]; then echo "OK"; else echo "Problems with test.py"; exit 1; fi
 
 echo "Setup successfull"
 echo "To use password manager run command:"
