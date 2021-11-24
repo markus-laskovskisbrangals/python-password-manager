@@ -159,7 +159,7 @@ def get_password():
                 result = cursor.execute("SELECT name, password FROM user_passwords WHERE name="+ "'" + name + "';")
                 passwords = cursor.fetchall()
                 connection.commit()
-                logger.info('User retreived password for' + name)
+                logger.info('User retreived password for ' + name)
                 if len(passwords) == 0:
                     print('There are not mathing passwords in database!')
                     return

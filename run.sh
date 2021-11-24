@@ -26,6 +26,12 @@ if [ $? -eq 0 ]; then echo "OK"; else echo "Problems with test_config.py"; exit 
 python3 test.py
 if [ $? -eq 0 ]; then echo "OK"; else echo "Problems with test.py"; exit 1; fi
 
+echo "Running Database migrations"
+python3 migration.py
+if [ $? -eq 0 ]; then echo "OK"; else echo "Problems with migration.py"; exit 1; fi
+
+echo "------------------------------------------------------------------------"
+
 echo "Setup successfull"
 echo "To use password manager run command:"
 echo "python3 generator.py"
