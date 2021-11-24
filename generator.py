@@ -33,8 +33,7 @@ try:
     db_user = config.get('database', 'db_user')
     db_pass = config.get('database', 'db_password')
 except:
-    print('Error in config file!')
-    logger.error('')
+    logger.error('Error while reading from config file')
     exit()
 
 logger.info('Cinfig file read successful')
@@ -129,7 +128,7 @@ def get_password():
         if option == 1:
             password_input = input('Enter your user password: ')
             if password_input != user_password:
-                logger.error('User entered wrong password')
+                logger.info('User entered wrong password')
                 print('Wrong password!')
                 return
             try:
@@ -150,7 +149,7 @@ def get_password():
             password_input = input('Enter your user password: ')
             if password_input != user_password:
                 print('Wrong password!')
-                logger.error('User entered wrong password')
+                logger.info('User entered wrong password')
                 return
             try:
                 name = input('Enter name of your password: ')
@@ -205,7 +204,7 @@ def generate_password():
         length = int(input('Enter your desired password length: '))
     except:
         print('Only numbers are allowed!')
-        logger.error('User did not specify password length')
+        logger.info('User did not specify password length')
         run()
     password = ''
     if length > 32:
@@ -227,7 +226,7 @@ if __name__ == '__main__':
     while not user_authenticated:
         if remaining_tries == 0:
             print('You typed incorrect password 3 times in a row, access is denied!')
-            logger.error('User entered wrong password 3 times')
+            logger.info('User entered wrong password 3 times')
             exit()
         auth_password = input('Please enter your password: ')
         if auth_password == user_password:
@@ -236,7 +235,7 @@ if __name__ == '__main__':
             user_authenticated = True
         else:
             remaining_tries -= 1
-            logger.error('User entered wrong password')
+            logger.info('User entered wrong password')
             print('Incorrect password! Remaining tries:', remaining_tries)
 
     run()

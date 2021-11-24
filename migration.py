@@ -32,7 +32,8 @@ try:
 	mysql_config_mysql_pass = config.get('database', 'db_password')
 
 except:
-	logger.exception('')
+	logger.exception('Error while reading from config file')
+
 logger.info('Finished reading cinfig file')
 
 connection = None
