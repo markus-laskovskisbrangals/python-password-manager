@@ -1,5 +1,8 @@
 #!/bin/bash
 
+#A setup file for python password manager
+#Run this script before generator.py
+
 echo "Python password manager setup script"
 echo "-------------------------------------"
 
